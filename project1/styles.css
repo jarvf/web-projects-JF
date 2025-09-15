@@ -1,0 +1,37 @@
+body {
+    background-color: #111;
+    color: #eee;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+/*Nav*/
+nav {
+    margin-bottom: 20px;
+    padding: 10px 0;
+}
+
+nav strong {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+nav a {
+    color: #ccc;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+nav a:hover {
+    color: #fff;
+}
+
+/*Headings*/
+h1 {
+    color: #f2f2f2;
+}
+
+
+p {
+    line-height: 1.6;
+}
