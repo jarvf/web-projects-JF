@@ -12,3 +12,16 @@ p {
     /*display: none;*/
     /* dispaly with non removes object from flow of page */
 }
+#container{
+    width: 100px;
+    height: 100px;
+    background-color: aqua;
+    position: relative;
+    overflow: scroll;
+}
+.object{
+    width: 50px;
+    height: 50px;
+    background-color: yellow;
+    position: absolute;
+}
