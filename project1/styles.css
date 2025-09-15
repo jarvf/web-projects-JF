@@ -35,3 +35,10 @@ h1 {
 p {
     line-height: 1.6;
 }
+.band-image {
+    display: block;
+    margin: 30px auto;
+    max-width: 800px;
+    height: auto;
+    opacity: 0.9;
+}
