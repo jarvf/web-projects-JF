@@ -66,7 +66,8 @@ function draw() {
   bgYOffset -= 0.5;
   bgXOffset -= 0.5;
 
-  if (frameCount % 60 === 0) generateRandomColors();
+  if (saver && frameCount % (60 * 5) === 0) generateRandomColors();
+
 
   //overlay
   saverEase += (saver ? 1 : 0) - saverEase;   
@@ -99,14 +100,10 @@ function generateRandomColors() {
   }
 }
 
-//click for new colors too
 function mousePressed() {
-  if (saver) {
-    generateRandomColors();   
-  } else {
-    setSaver(true);           
-  }
+  if (!saver) setSaver(true);   
 }
+
 
 
 // slow background layer for effect
