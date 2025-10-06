@@ -25,10 +25,19 @@ function setup() {
 
 
 function draw() {
+  // 3s idle
   if (Date.now() - lastActivity > IDLE_MS) setSaver(true);
-  background(0);
 
-  //background
+  // idle and awake
+  background(0);
+  if (!saver) {            
+    drawText();            
+    return;                
+  }
+
+  // screensaver
+
+  // background layer
   for (let y = 0; y < height + patternSize; y += patternSize) {
     for (let x = 0; x < width + patternSize; x += patternSize) {
       drawBackgroundViolet(
@@ -38,41 +47,35 @@ function draw() {
     }
   }
 
-  //foreground
+  // foreground layer
   for (let y = 0; y < height + patternSize; y += patternSize) {
     for (let x = 0; x < width + patternSize; x += patternSize) {
       drawPattern(
         x - (xOffset % patternSize),
         y + (yOffset % patternSize),
-        x,
-        y
+        x, y
       );
     }
   }
 
-  //movespeed
+  // movement
   yOffset -= 1;
   xOffset += 1;
   bgYOffset -= 0.5;
   bgXOffset -= 0.5;
 
-  if (frameCount % 60 === 0) {
-    generateRandomColors();
+  if (frameCount % 60 === 0) generateRandomColors();
+
+  //overlay
+  saverEase += (saver ? 1 : 0) - saverEase;   
+  saverEase = constrain(saverEase, 0, 1);
+  if (saverEase > 0.01) {
+    noStroke();
+    fill(0, 140 * saverEase);
+    rect(0, 0, width, height);
   }
-
-  // fade overlay and hide bar during screensaver
-saverEase += (saver ? 1 : 0) - saverEase;             
-saverEase = constrain(saverEase, 0, 1);
-
-if (saverEase < 0.5) drawText();
-
-if (saverEase > 0.01) {
-  noStroke();
-  fill(0, 140 * saverEase);                            
-  rect(0, 0, width, height);
 }
 
-}
 
 function drawText() {
   fill(255);
@@ -93,8 +96,13 @@ function generateRandomColors() {
 
 //click for new colors too
 function mousePressed() {
-  generateRandomColors();
+  if (saver) {
+    generateRandomColors();   
+  } else {
+    setSaver(true);           
+  }
 }
+
 
 // slow background layer for effect
 function drawBackgroundViolet(startX, startY) {
