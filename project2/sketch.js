@@ -11,11 +11,32 @@ let saver = false;
 let saverEase = 0;         
 let flakes = [];
 const GLITTER_COUNT = 1000;   
-let lightT = 0;      
+let lightT = 0;     
+let shapeImg;                 
+let shapes = [];              
+let shapeReady = false;  
+
+
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   generateRandomColors();
-  initGlitter();                    
+  initGlitter();  
+  
+  // imageload
+  loadImage(
+    'assets/shape.png',
+    (img) => {
+      console.log('Image loaded successfully!', img.width, img.height);
+      shapeImg = img;
+      shapeReady = true;
+      initShapes();   
+    },
+    (err) => {
+      console.error('shape.png failed to load:', err);
+      shapeReady = false;
+    }
+  );
 
   const bump = () => { lastActivity = Date.now(); if (saver) setSaver(false); };
   window.addEventListener('mousemove', bump, { passive: true });
@@ -60,6 +81,7 @@ function draw() {
       );
     }
   }
+  
   // movement
   yOffset -= 1;
   xOffset += 1;
@@ -68,8 +90,7 @@ function draw() {
 
   if (saver && frameCount % (60 * 5) === 0) generateRandomColors();
 
-
-  //overlay
+  // overlay 
   saverEase += (saver ? 1 : 0) - saverEase;   
   saverEase = constrain(saverEase, 0, 1);
   if (saverEase > 0.01) {
@@ -77,7 +98,44 @@ function draw() {
     fill(0, 60 * saverEase);
     rect(0, 0, width, height);
   }
-    if (saver) {
+  
+  // moves the pngs diagonally
+  if (saver && shapeReady) {
+    for (let shape of shapes) {
+      const shapeW = shapeImg.width * shape.scale;
+      const shapeH = shapeImg.height * shape.scale;
+      
+      shape.x += shape.vx;
+      shape.y += shape.vy;
+      
+      // Wrap around when off screen
+      if (shape.x - shapeW * 0.5 > width + 60) {
+        shape.x = -shapeW * 0.5 - 60;
+      }
+      if (shape.y - shapeH * 0.5 > height + 60) {
+        shape.y = -shapeH * 0.5 - 60;
+      }
+      if (shape.y + shapeH * 0.5 < -60) {
+        shape.y = height + shapeH * 0.5 + 60;
+      }
+    }
+  }
+
+  // Draw the PNG images first
+  if (saver && shapeReady && shapeImg) {
+    for (let shape of shapes) {
+      push();
+      image(shapeImg, 
+            shape.x, 
+            shape.y,
+            shapeImg.width * shape.scale,
+            shapeImg.height * shape.scale);
+      pop();
+    }
+  }
+  
+  // Draw glitter 
+  if (saver) {
     drawGlitter();
   }
 }
@@ -137,12 +195,19 @@ function drawPixel(x, y, size, col) {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   generateRandomColors();
+  initGlitter();
+  
+  if (shapeImg && shapeReady) {
+    initShapes();  
+  }
 }
+
 function setSaver(active) {
   saver = active;
   // toggle cursor hider
   document.body.classList.toggle('saver-active', saver);
 }
+
 function initGlitter() {
   flakes = [];
   for (let i = 0; i < GLITTER_COUNT; i++) {
@@ -158,38 +223,115 @@ function initGlitter() {
 }
 
 function drawGlitter() {
-  lightT += 0.01;                     // hoverlights
-  const lx = cos(lightT), ly = sin(lightT * 0.85);
+  lightT += 0.01;                                  // sweeping light
+  const lx = cos(lightT), ly = sin(lightT * 0.85); // light direction
 
-  blendMode(ADD);                     // adds bloom
+  blendMode(ADD);               // bloom highlights
   strokeCap(SQUARE);
   colorMode(RGB, 255);
 
   for (const f of flakes) {
-    // hover/float effect
     f.x = (f.x + sin(frameCount * 0.002 + f.n) * 0.3 + width) % width;
     f.y = (f.y + cos(frameCount * 0.002 + f.n) * 0.25 + height) % height;
 
-    // shiny flash effect
     const nx = cos(f.theta), ny = sin(f.theta);
-    let spec = max(0, nx * lx + ny * ly);
-    spec = pow(spec, 24);             
-
+    let spec = max(0, nx * lx + ny * ly); spec = pow(spec, 24);
     const tw = pow(noise(f.x * 0.02 + f.n, f.y * 0.02 + f.n, frameCount * 0.02), 3);
-
     const intensity = constrain(0.15 * tw + 1.2 * spec, 0, 1);
 
-    // glowing
-    noStroke();
-    fill(255, 255 * 0.18 * intensity);
+    noStroke(); fill(255, 255 * 0.18 * intensity);
     circle(f.x, f.y, f.s * 6);
-
-    // star
     drawStarburst(f.x, f.y, f.s * (1.2 + 1.0 * intensity), 180 + 75 * intensity, f.theta);
   }
 
+  // sparkle effect in png
+  if (shapeReady) {
+    const currentFrame = frameCount * 0.15;
+    
+    for (let shape of shapes) {
+      if (shape.flakes && shape.flakes.length) {
+        for (const f of shape.flakes) {
+          const px = shape.x + (f.dx + shapeImg.width / 2) * shape.scale;
+          const py = shape.y + (f.dy + shapeImg.height / 2) * shape.scale;
+
+          // rotates the sparkles slowly
+          f.theta += f.rotSpeed;
+          
+          // flashing effect
+          const flashChance = noise(f.n + currentFrame);
+          const isFlashing = flashChance > 0.75;  // 25% chance (less = better performance)
+          
+          // skips dim sparkles, help with lag
+          if (!isFlashing && random() > 0.3) continue;  
+          
+          const intensity = isFlashing ? 1.0 : 0.15;
+
+          push();
+          translate(px, py);
+          rotate(f.theta);
+          
+          noStroke();
+          
+          if (isFlashing) {
+            //bright sparkle
+            fill(255, 50);
+            beginShape();
+            vertex(0, -f.s * 4);
+            vertex(f.s * 2, 0);
+            vertex(0, f.s * 4);
+            vertex(-f.s * 2, 0);
+            endShape(CLOSE);
+            
+            // main diamond
+            fill(255, 200);
+            beginShape();
+            vertex(0, -f.s * 2.5);
+            vertex(f.s * 1.2, 0);
+            vertex(0, f.s * 2.5);
+            vertex(-f.s * 1.2, 0);
+            endShape(CLOSE);
+            
+            // bright cener
+            fill(255);
+            beginShape();
+            vertex(0, -f.s * 1.2);
+            vertex(f.s * 0.6, 0);
+            vertex(0, f.s * 1.2);
+            vertex(-f.s * 0.6, 0);
+            endShape(CLOSE);
+            
+            // cross sparkle lines
+            stroke(255);
+            strokeWeight(2);
+            line(0, -f.s * 3, 0, f.s * 3);
+            line(-f.s * 1.5, 0, f.s * 1.5, 0);
+            
+            // rays
+            strokeWeight(1.5);
+            rotate(PI / 4);
+            line(-f.s * 2.5, 0, f.s * 2.5, 0);
+            line(0, -f.s * 2.5, 0, f.s * 2.5);
+          } else {
+            // dim sparkles
+            fill(255, 30);
+            beginShape();
+            vertex(0, -f.s * 2);
+            vertex(f.s, 0);
+            vertex(0, f.s * 2);
+            vertex(-f.s, 0);
+            endShape(CLOSE);
+          }
+          
+          pop();
+        }
+      }
+    }
+  }
+
   blendMode(BLEND);
+  colorMode(RGB, 255);
 }
+
 // star sparkle
 function drawStarburst(x, y, r, alpha, rot) {
   push();
@@ -210,3 +352,52 @@ function drawStarburst(x, y, r, alpha, rot) {
   pop();
 }
 
+function initShapes() {
+  if (!shapeImg) return;
+  
+  shapes = [];
+  const targetW = width * 0.25;  //png scale
+  const scale = targetW / shapeImg.width;
+  const count = 15;  // number of pngs on screen
+  
+  for (let i = 0; i < count; i++) {
+    const shape = {
+      x: random(-width * 0.5, width),
+      y: random(-height * 0.5, height),
+      scale: scale,
+      vx: random(0.5, 1.2),   // Horizontal speed
+      vy: random(0.3, 0.8),   // Vertical speed 
+      flakes: []
+    };
+    
+    // Spawn sparkles for this shape
+    spawnMaskFlakes(shapeImg, shape, 200);  
+    shapes.push(shape);
+  }
+}
+
+function spawnMaskFlakes(img, shape, count) {
+  shape.flakes = [];
+  if (!img) return;
+
+  img.loadPixels();
+  const w = img.width, h = img.height;
+  let placed = 0, guard = 0;
+
+  while (placed < count && guard++ < count * 30) {
+    const x = floor(random(w));
+    const y = floor(random(h));
+    const a = img.pixels[(y * w + x) * 4 + 3]; 
+    if (a > 10) { // visible png parts
+      shape.flakes.push({
+        dx: (x - w / 2),
+        dy: (y - h / 2),
+        s: random(2, 5),  // larger sizes for visible diamonds
+        n: random(1000),
+        theta: random(TWO_PI),
+        rotSpeed: random(-0.08, 0.08)  // rotation speed
+      });
+      placed++;
+    }
+  }
+}
