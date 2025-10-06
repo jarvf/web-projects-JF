@@ -9,12 +9,14 @@ const IDLE_MS = 3000;
 let lastActivity = Date.now();
 let saver = false;         
 let saverEase = 0;         
-
+let flakes = [];
+const GLITTER_COUNT = 1000;   
+let lightT = 0;      
 function setup() {
   createCanvas(windowWidth, windowHeight);
   generateRandomColors();
+  initGlitter();                    
 
-  // user activity resets/exits
   const bump = () => { lastActivity = Date.now(); if (saver) setSaver(false); };
   window.addEventListener('mousemove', bump, { passive: true });
   window.addEventListener('mousedown', bump, { passive: true });
@@ -22,6 +24,7 @@ function setup() {
   window.addEventListener('wheel', bump, { passive: true });
   window.addEventListener('touchstart', bump, { passive: true });
 }
+
 
 
 function draw() {
@@ -57,7 +60,6 @@ function draw() {
       );
     }
   }
-
   // movement
   yOffset -= 1;
   xOffset += 1;
@@ -71,8 +73,11 @@ function draw() {
   saverEase = constrain(saverEase, 0, 1);
   if (saverEase > 0.01) {
     noStroke();
-    fill(0, 140 * saverEase);
+    fill(0, 60 * saverEase);
     rect(0, 0, width, height);
+  }
+    if (saver) {
+    drawGlitter();
   }
 }
 
@@ -141,3 +146,70 @@ function setSaver(active) {
   // toggle cursor hider
   document.body.classList.toggle('saver-active', saver);
 }
+function initGlitter() {
+  flakes = [];
+  for (let i = 0; i < GLITTER_COUNT; i++) {
+    flakes.push({
+      x: random(width),
+      y: random(height),
+      s: random(1.4, 3.2),        // flake size
+      n: random(1000),            // twinkle
+      theta: random(TWO_PI),      // orient the flakes
+      hue: random([200, 280, 320])// colors
+    });
+  }
+}
+
+function drawGlitter() {
+  lightT += 0.01;                     // hoverlights
+  const lx = cos(lightT), ly = sin(lightT * 0.85);
+
+  blendMode(ADD);                     // adds bloom
+  strokeCap(SQUARE);
+  colorMode(RGB, 255);
+
+  for (const f of flakes) {
+    // hover/float effect
+    f.x = (f.x + sin(frameCount * 0.002 + f.n) * 0.3 + width) % width;
+    f.y = (f.y + cos(frameCount * 0.002 + f.n) * 0.25 + height) % height;
+
+    // shiny flash effect
+    const nx = cos(f.theta), ny = sin(f.theta);
+    let spec = max(0, nx * lx + ny * ly);
+    spec = pow(spec, 24);             
+
+    const tw = pow(noise(f.x * 0.02 + f.n, f.y * 0.02 + f.n, frameCount * 0.02), 3);
+
+    const intensity = constrain(0.15 * tw + 1.2 * spec, 0, 1);
+
+    // glowing
+    noStroke();
+    fill(255, 255 * 0.18 * intensity);
+    circle(f.x, f.y, f.s * 6);
+
+    // star
+    drawStarburst(f.x, f.y, f.s * (1.2 + 1.0 * intensity), 180 + 75 * intensity, f.theta);
+  }
+
+  blendMode(BLEND);
+}
+// star sparkle
+function drawStarburst(x, y, r, alpha, rot) {
+  push();
+  translate(x, y);
+  rotate(rot);
+
+  stroke(255, alpha);      
+  // main shape
+  strokeWeight(max(1, r * 0.22));
+  line(-r, 0, r, 0);       
+  line(0, -r, 0, r);      
+  strokeWeight(max(1, r * 0.16));
+  rotate(PI / 4);
+  line(-r * 0.75, 0, r * 0.75, 0);
+  rotate(PI / 2);
+  line(-r * 0.75, 0, r * 0.75, 0);
+
+  pop();
+}
+
