@@ -5,13 +5,27 @@ let xOffset = 0;
 let bgYOffset = 0;
 let bgXOffset = 0;
 let colorGrid = [];
+const IDLE_MS = 3000;      
+let lastActivity = Date.now();
+let saver = false;         
+let saverEase = 0;         
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   generateRandomColors();
+
+  // user activity resets/exits
+  const bump = () => { lastActivity = Date.now(); if (saver) setSaver(false); };
+  window.addEventListener('mousemove', bump, { passive: true });
+  window.addEventListener('mousedown', bump, { passive: true });
+  window.addEventListener('keydown', bump);
+  window.addEventListener('wheel', bump, { passive: true });
+  window.addEventListener('touchstart', bump, { passive: true });
 }
 
+
 function draw() {
+  if (Date.now() - lastActivity > IDLE_MS) setSaver(true);
   background(0);
 
   //background
@@ -46,7 +60,18 @@ function draw() {
     generateRandomColors();
   }
 
-  drawText();
+  // fade overlay and hide bar during screensaver
+saverEase += (saver ? 1 : 0) - saverEase;             
+saverEase = constrain(saverEase, 0, 1);
+
+if (saverEase < 0.5) drawText();
+
+if (saverEase > 0.01) {
+  noStroke();
+  fill(0, 140 * saverEase);                            
+  rect(0, 0, width, height);
+}
+
 }
 
 function drawText() {
@@ -55,7 +80,7 @@ function drawText() {
   fill(0);
   textSize(18);
   textAlign(CENTER, CENTER);
-  text("Click to change colors", width / 2, 15);
+  text("3 seconds for screensaver", width / 2, 15);
 }
 
 // color generator
@@ -102,4 +127,9 @@ function drawPixel(x, y, size, col) {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   generateRandomColors();
+}
+function setSaver(active) {
+  saver = active;
+  // toggle cursor hider
+  document.body.classList.toggle('saver-active', saver);
 }

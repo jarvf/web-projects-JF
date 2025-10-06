@@ -8,3 +8,5 @@ body {
 canvas {
   display: block;
 }
+/* hide cursor during screensaver */
+body.saver-active { cursor: none; }
