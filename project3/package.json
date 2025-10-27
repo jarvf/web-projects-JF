@@ -4,11 +4,13 @@
   "description": "It is expected for you to follow along with class demos. Please add them to this folder as you go along so I can see your progress!",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^5.1.0"
-  }
+  },
+  "keywords": []
 }

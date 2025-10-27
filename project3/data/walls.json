@@ -1,0 +1,20 @@
+{
+  "walls": {
+    "p1001": [
+      {
+        "id": "w1",
+        "author": "kimya",
+        "text": "welcome to the parade 🖤",
+        "createdAt": 1698401000000
+      }
+    ],
+    "p1761564723356": [
+      {
+        "id": "w1761565385748",
+        "author": "I a test I store the data",
+        "text": "helo",
+        "createdAt": 1761565385748
+      }
+    ]
+  }
+}

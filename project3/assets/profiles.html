@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <title> Black Parade NYC</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body class="myspace">
+    <header class="site-header">
+        <div class="logo">🖤 Black Parade NYC</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a class="is-active" href="profiles.html">Profiles</a>
+        </nav>
+    </header>
+
+
+    <main class="container">
+        <section class="panel">
+            <h1>Create Profile</h1>
+            <form id="createForm">
+                <label>Username <input name="username" required /></label>
+                <label>Bio <textarea name="bio" rows="3" placeholder="tell us who you are"></textarea></label>
+                <label>Profile Song (YouTube embed URL) <input name="song"
+                        placeholder="https://www.youtube.com/embed/..." /></label>
+                <label>Top 8 (comma‑separated names) <input name="top8" placeholder="gerard, mikey, frank..." /></label>
+                <button class="btn" type="submit">Create</button>
+            </form>
+        </section>
+
+
+        <section>
+            <h2>People</h2>
+            <div id="people" class="cards"></div>
+        </section>
+    </main>
+
+
+    <script src="profiles.js" type="module"></script>
+</body>
+
+</html>
