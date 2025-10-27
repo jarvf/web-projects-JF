@@ -1,0 +1,13 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+/* remove scroll bar */
+    height: 100%;
+
+    margin: 0;
+}
+form {
+    display: flex;
+    flex-direction: column;
+}
