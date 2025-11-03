@@ -207,7 +207,7 @@ textarea {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 8px;
-    margin-top: 8px
+    margin-top: 8px;
 }
 
 .top8 .bubble {
@@ -325,7 +325,7 @@ body.myspace .site-footer {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 0;
     background-image: url("images/tiles/sparkle.gif");
     background-repeat: repeat;
     mix-blend-mode: screen;
@@ -433,8 +433,10 @@ h3 {
 .behindText {
     padding: 20px;
     border: 1px solid var(--line);
-    background: var(--panel);
     border-radius: 10px;
-    margin-top: 20px
+    margin-top: 20px;
+    background: rgba(17, 17, 17, 0.88);
+    backdrop-filter: blur(2px);
+    z-index: 1;
 }
 /* END additional/minor CSS changes */
