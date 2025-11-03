@@ -1,0 +1,15 @@
+
+
+{
+    
+"profiles": [
+{
+"id": "p1001",
+"username": "jarvis",
+"bio": "NYC emo/MCR. Building tiny web things.",
+"song": "https://youtu.be/Qq_caFxzKqg?list=RDQq_caFxzKqg",
+"top8": ["gerard", "mikey", "frank", "ray", "bob", "lindsey", "bert", "spencer"],
+"createdAt": 1698400000000
+}
+]
+}
