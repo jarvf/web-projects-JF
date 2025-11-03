@@ -426,15 +426,6 @@ h3 {
         grid-template-columns: repeat(2, minmax(80px, 1fr));
     }
 }
-@media (min-width: 412px) and (max-width: 944px) {
-    .profile-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .profile-card, .panel.wall {
-        width: 100%;
-    }
-}
 /* END media queries */
 
 /* START additional/minor CSS changes (by Bryan) */
