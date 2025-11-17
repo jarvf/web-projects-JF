@@ -2,23 +2,23 @@
   <div id="app" class="app-shell">
     <header>
       <h1 class="rainbow-text">CyberDream 2000™</h1>
-      <p class="blink">THE FUTURE IS NOW\!</p>
+      <p class="blink">THE FUTURE IS NOW!</p>
     </header>
 
     <main>
-      <p>
-        Experimental ad site for my Project 4 starts as a cheesy 90s infomercial,
-        then slowly falls apart the more you interact with it.
-      </p>
-      <p>
-        first I’m wiring up layout + global styles, then creepy behaviors.
+      <RetroAd />
+
+      <p style="margin-top: 1.5rem;">
       </p>
     </main>
   </div>
 </template>
 
 <script>
+import RetroAd from './components/RetroAd.vue'
+
 export default {
-  name: 'AppShell'
+  name: 'AppShell',
+  components: { RetroAd }
 }
 </script>
