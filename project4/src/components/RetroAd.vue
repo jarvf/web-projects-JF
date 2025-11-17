@@ -135,28 +135,28 @@ methods: {
   handleInteraction() {
     this.interactionCount++
 
-    this.glitchIntensity = Math.min(0.9, this.interactionCount * 0.08)
+    this.glitchIntensity = Math.min(0.9, this.interactionCount * 0.06)
 
-    if (this.interactionCount > 3 && this.interactionCount < 10) {
+    // typing interaction glitches
+    if (this.interactionCount > 5) {
       this.triggerGlitch()
-    }
-
-    // stages
-    if (this.interactionCount >= 8 && this.stage === 1) {
-      this.stage = 2
-      setTimeout(() => {
-        this.stage = 3
-      }, 1500) 
     }
   },
 
   handleSubmit() {
-    // submitting the form now rushes stages
+    // If they haven't filled both, glitch at them but don't move on yet
+    if (!this.userInfo.name || !this.userInfo.email) {
+      this.finalMessage = 'INCOMPLETE CREDENTIALS. PROFILE INTAKE PENDING.'
+      this.triggerGlitch()
+      return
+    }
+
+    // Full data, k process
     if (this.stage === 1) {
       this.stage = 2
       setTimeout(() => {
         this.stage = 3
-      }, 1500)
+      }, 3000) 
     }
   },
 
