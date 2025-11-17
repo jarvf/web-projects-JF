@@ -29,7 +29,7 @@
         <h1 class="rainbow-text title">
           <GlitchText :text="'CyberDream 2000™'" :intensity="glitchIntensity" />
         </h1>
-        <h2 class="subtitle blink">THE FUTURE IS NOW!</h2>
+        <h2 class="subtitle blink">TH3 FU7UR3 1S N0W!</h2>
 
         <div class="product-box">
           <img
