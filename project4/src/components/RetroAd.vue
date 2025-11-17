@@ -16,8 +16,8 @@
     <!-- eye -->
     <WatchingEye :visible="stage >= 2" />
 
-    <!-- mousecorruption -->
-    <MouseCorruption :active="interactionCount > 10" />
+    <!-- DISABLED FOR PERFORMANCE -->
+    <MouseCorruption :active="false" />
     <!-- stage1 -->
     <div v-if="stage === 1" class="stage-one">
       <div class="stars"></div>
@@ -47,24 +47,25 @@
         <div class="form-container">
           <h3 class="form-title">CL4IM3R1NG Y0UR FUTURE'S T0D4Y!</h3>
           <form @submit.prevent="handleSubmit">
-            <input
-              v-model="userInfo.name"
-              type="text"
-              placeholder="YOUR NAME"
+            <input 
+              v-model="userInfo.name" 
+              type="text" 
+              placeholder="YOUR NAME" 
               class="retro-input"
               @input="handleInteraction"
             />
-            <input
-              v-model="userInfo.email"
-              type="email"
-              placeholder="YOUR EMAIL"
+            <input 
+              v-model="userInfo.email" 
+              type="email" 
+              placeholder="YOUR EMAIL" 
               class="retro-input"
               @input="handleInteraction"
             />
             <button type="submit" class="retro-button">
-              💾 D0WNL04D N0W 💾
+              💾 DOWNLOAD NOW 💾
             </button>
           </form>
+
         </div>
 
         <div class="visitor-counter">Visitor #{{ visitorCount }}</div>
@@ -130,33 +131,34 @@ export default {
       glitchIntensity: 0.1,
     };
   },
-  methods: {
-    handleInteraction() {
-      this.interactionCount++;
+methods: {
+  handleInteraction() {
+    this.interactionCount++
 
-      // this increases glitch intensity with interactions
-      this.glitchIntensity = Math.min(0.8, this.interactionCount * 0.05);
+    this.glitchIntensity = Math.min(0.9, this.interactionCount * 0.08)
 
-      // start glitching between 5 and 15 interactions
-      if (this.interactionCount > 5 && this.interactionCount < 15) {
-        this.triggerGlitch();
-      }
+    if (this.interactionCount > 3 && this.interactionCount < 10) {
+      this.triggerGlitch()
+    }
 
-      // move to stage 2 after enough interactions
-      if (this.interactionCount >= 15) {
-        this.stage = 2;
-        setTimeout(() => {
-          this.stage = 3;
-        }, 3000);
-      }
-    },
-
-    handleSubmit() {
-      this.stage = 2;
+    // stages
+    if (this.interactionCount >= 8 && this.stage === 1) {
+      this.stage = 2
       setTimeout(() => {
-        this.stage = 3;
-      }, 3000);
-    },
+        this.stage = 3
+      }, 1500) 
+    }
+  },
+
+  handleSubmit() {
+    // submitting the form now rushes stages
+    if (this.stage === 1) {
+      this.stage = 2
+      setTimeout(() => {
+        this.stage = 3
+      }, 1500)
+    }
+  },
 
     triggerGlitch() {
       this.isGlitching = true;
@@ -584,4 +586,8 @@ export default {
     text-shadow: 0 0 30px rgba(255, 0, 0, 1);
   }
 }
+.stars {
+  pointer-events: none !important;
+}
+
 </style>
