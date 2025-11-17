@@ -22,7 +22,7 @@
     <div v-if="stage === 1" class="stage-one">
       <div class="stars"></div>
       <marquee class="top-banner" behavior="scroll" direction="left">
-        🌟 AMAZING OFFER!!! 🌟 LIMITED TIME!!! 🌟 DON'T MISS OUT!!! 🌟
+        🌟 4M4Z1NG 0FF3R!!! 🌟 L1M1T3D 71ME!!! 🌟 D0N'T M1SS 0UT!!! 🌟
       </marquee>
 
       <div class="main-content">
@@ -33,19 +33,19 @@
 
         <div class="product-box">
           <img
-            src="https://via.placeholder.com/200x150/FF00FF/FFFF00?text=DIGITAL+DREAMS"
+            src="https://coin-images.coingecko.com/coins/images/34391/large/NJy34Zwd_400x400.jpg?1704783819"
             class="product-image"
             alt="product"
           />
           <div class="product-text">
-            <p class="cyber-text">🚀 ENHANCE YOUR DIGITAL LIFE! 🚀</p>
-            <p class="price blink">ONLY $99.99</p>
-            <p class="discount">WAS <s>$999.99</s> - SAVE 90%!!!</p>
+            <p class="cyber-text">🚀 3NH4NC3 Y0UR D1G174L L1F3! 🚀</p>
+            <p class="price blink">0NLY $99.99</p>
+            <p class="discount">W4S <s>$999.99</s> - SAVE 90%!!!</p>
           </div>
         </div>
 
         <div class="form-container">
-          <h3 class="form-title">CLAIM YOUR FUTURE TODAY!</h3>
+          <h3 class="form-title">CL4IM3R1NG Y0UR FUTURE'S T0D4Y!</h3>
           <form @submit.prevent="handleSubmit">
             <input
               v-model="userInfo.name"
@@ -62,7 +62,7 @@
               @input="handleInteraction"
             />
             <button type="submit" class="retro-button">
-              💾 DOWNLOAD NOW 💾
+              💾 D0WNL04D N0W 💾
             </button>
           </form>
         </div>
@@ -84,14 +84,14 @@
     <!-- Stage 3 -->
     <div v-else-if="stage === 3" class="stage-three">
       <div class="dark-container">
-        <h1 class="reveal-title">CONGRATULATIONS</h1>
-        <p class="reveal-text">Product ID: {{ generateProductId() }}</p>
-        <p class="reveal-text">Status: SUCCESSFULLY CATALOGUED</p>
+        <h1 class="reveal-title">C0NGR47UM4L47I0NS</h1>
+        <p class="reveal-text">Pr0duc7 ID: {{ generateProductId() }}</p>
+        <p class="reveal-text">Status: 5UCC3SSFULLY C4T4L0GU3D</p>
         <div class="user-data">
           <p>Name: {{ userInfo.name || "ANONYMOUS_USER" }}</p>
           <p>Email: {{ userInfo.email || "DATA_COLLECTED" }}</p>
-          <p>Interaction Points: {{ interactionCount }}</p>
-          <p>Behavioral Profile: COMPLETE</p>
+          <p>Int3r4ct10n P0in7s: {{ interactionCount }}</p>
+          <p>B3hav10r4l Pr0fil3: C0MPL37ION3D</p>
         </div>
         <p class="final-message">{{ finalMessage }}</p>
       </div>
@@ -126,7 +126,7 @@ export default {
       interactionCount: 0,
       visitorCount: Math.floor(Math.random() * 99999) + 10000,
       glitchChars: "!@#$%^&*()_+-=[]{}|;:,.<>?/~`",
-      finalMessage: "YOU ARE THE PRODUCT",
+      finalMessage: "Y0U 4R3 TH3 PR0DUC7",
       glitchIntensity: 0.1,
     };
   },
