@@ -26,12 +26,12 @@ export default {
       eyeY: 0,
       message: "WATCHING",
       messages: [
-        "HELO",
-        "I LOOK THE YOU ",
-        "DON'T LOOKERING AWAYS",
-        "YOU CAN'T THE HIDES",
-        "STILL WATCHERING",
-        "ALWAYS WATCHERING",
+        "H3LO",
+        "I L00K THE Y0U ",
+        "D0N'T L00K3RING AWAYS",
+        "Y0U C4N'T TH3 H1D3S",
+        "S71LL W4TCH3R1NG",
+        "4LWAY5 W4TCH3R1NG",
       ],
     };
   },

@@ -1,21 +1,21 @@
 <template>
-  <div class="retro-container" :class="{ 'glitching': isGlitching }">
+  <div class="retro-container" :class="{ glitching: isGlitching }">
     <!-- usertracker -->
-    <UserTracker 
-      :showTracker="interactionCount > 8" 
+    <UserTracker
+      :showTracker="interactionCount > 8"
       @activity="handleTrackerActivity"
     />
-    
+
     <!--creepypop -->
-    <CreepyPopup 
+    <CreepyPopup
       @popup-shown="handlePopupShown"
       @user-data="collectUserData"
       @user-typing="handleUserTyping"
     />
-    
+
     <!-- eye -->
     <WatchingEye :visible="stage >= 2" />
-    
+
     <!-- mousecorruption -->
     <MouseCorruption :active="interactionCount > 10" />
     <!-- stage1 -->
@@ -24,17 +24,19 @@
       <marquee class="top-banner" behavior="scroll" direction="left">
         🌟 AMAZING OFFER!!! 🌟 LIMITED TIME!!! 🌟 DON'T MISS OUT!!! 🌟
       </marquee>
-      
+
       <div class="main-content">
         <h1 class="rainbow-text title">
           <GlitchText :text="'CyberDream 2000™'" :intensity="glitchIntensity" />
         </h1>
         <h2 class="subtitle blink">THE FUTURE IS NOW!</h2>
-        
+
         <div class="product-box">
-          <img src="https://via.placeholder.com/200x150/FF00FF/FFFF00?text=DIGITAL+DREAMS" 
-               class="product-image" 
-               alt="product" />
+          <img
+            src="https://via.placeholder.com/200x150/FF00FF/FFFF00?text=DIGITAL+DREAMS"
+            class="product-image"
+            alt="product"
+          />
           <div class="product-text">
             <p class="cyber-text">🚀 ENHANCE YOUR DIGITAL LIFE! 🚀</p>
             <p class="price blink">ONLY $99.99</p>
@@ -45,17 +47,17 @@
         <div class="form-container">
           <h3 class="form-title">CLAIM YOUR FUTURE TODAY!</h3>
           <form @submit.prevent="handleSubmit">
-            <input 
-              v-model="userInfo.name" 
-              type="text" 
-              placeholder="YOUR NAME" 
+            <input
+              v-model="userInfo.name"
+              type="text"
+              placeholder="YOUR NAME"
               class="retro-input"
               @input="handleInteraction"
             />
-            <input 
-              v-model="userInfo.email" 
-              type="email" 
-              placeholder="YOUR EMAIL" 
+            <input
+              v-model="userInfo.email"
+              type="email"
+              placeholder="YOUR EMAIL"
               class="retro-input"
               @input="handleInteraction"
             />
@@ -65,9 +67,7 @@
           </form>
         </div>
 
-        <div class="visitor-counter">
-          Visitor #{{ visitorCount }}
-        </div>
+        <div class="visitor-counter">Visitor #{{ visitorCount }}</div>
       </div>
     </div>
 
@@ -88,8 +88,8 @@
         <p class="reveal-text">Product ID: {{ generateProductId() }}</p>
         <p class="reveal-text">Status: SUCCESSFULLY CATALOGUED</p>
         <div class="user-data">
-          <p>Name: {{ userInfo.name || 'ANONYMOUS_USER' }}</p>
-          <p>Email: {{ userInfo.email || 'DATA_COLLECTED' }}</p>
+          <p>Name: {{ userInfo.name || "ANONYMOUS_USER" }}</p>
+          <p>Email: {{ userInfo.email || "DATA_COLLECTED" }}</p>
           <p>Interaction Points: {{ interactionCount }}</p>
           <p>Behavioral Profile: COMPLETE</p>
         </div>
@@ -100,127 +100,137 @@
 </template>
 
 <script>
-import GlitchText from './GlitchText.vue'
-import UserTracker from './UserTracker.vue'
-import CreepyPopup from './CreepyPopup.vue'
-import WatchingEye from './WatchingEye.vue'
-import MouseCorruption from './MouseCorruption.vue'
+import GlitchText from "./GlitchText.vue";
+import UserTracker from "./UserTracker.vue";
+import CreepyPopup from "./CreepyPopup.vue";
+import WatchingEye from "./WatchingEye.vue";
+import MouseCorruption from "./MouseCorruption.vue";
 
 export default {
-  name: 'RetroAd',
+  name: "RetroAd",
   components: {
     GlitchText,
     UserTracker,
     CreepyPopup,
     WatchingEye,
-    MouseCorruption
+    MouseCorruption,
   },
   data() {
     return {
       stage: 1,
       isGlitching: false,
       userInfo: {
-        name: '',
-        email: ''
+        name: "",
+        email: "",
       },
       interactionCount: 0,
       visitorCount: Math.floor(Math.random() * 99999) + 10000,
-      glitchChars: '!@#$%^&*()_+-=[]{}|;:,.<>?/~`',
-      finalMessage: 'YOU ARE THE PRODUCT',
-      glitchIntensity: 0.1
-    }
+      glitchChars: "!@#$%^&*()_+-=[]{}|;:,.<>?/~`",
+      finalMessage: "YOU ARE THE PRODUCT",
+      glitchIntensity: 0.1,
+    };
   },
   methods: {
     handleInteraction() {
-      this.interactionCount++
-      
+      this.interactionCount++;
+
       // this increases glitch intensity with interactions
-      this.glitchIntensity = Math.min(0.8, this.interactionCount * 0.05)
-      
+      this.glitchIntensity = Math.min(0.8, this.interactionCount * 0.05);
+
       // start glitching between 5 and 15 interactions
       if (this.interactionCount > 5 && this.interactionCount < 15) {
-        this.triggerGlitch()
+        this.triggerGlitch();
       }
-      
+
       // move to stage 2 after enough interactions
       if (this.interactionCount >= 15) {
-        this.stage = 2
+        this.stage = 2;
         setTimeout(() => {
-          this.stage = 3
-        }, 3000)
+          this.stage = 3;
+        }, 3000);
       }
     },
-    
+
     handleSubmit() {
-      this.stage = 2
+      this.stage = 2;
       setTimeout(() => {
-        this.stage = 3
-      }, 3000)
+        this.stage = 3;
+      }, 3000);
     },
-    
+
     triggerGlitch() {
-      this.isGlitching = true
+      this.isGlitching = true;
       setTimeout(() => {
-        this.isGlitching = false
-      }, 200)
+        this.isGlitching = false;
+      }, 200);
     },
-    
+
     getGlitchText() {
       const phrases = [
-        'USER DATA PROCESSING...',
-        'BEHAVIORAL ANALYSIS COMPLETE',
-        'PROFILE GENERATION IN PROGRESS',
-        'YOU ARE THE PRODUCT',
-        'SELLING YOUR ATTENTION',
-        'DATA HARVESTED SUCCESSFULLY'
-      ]
-      const phrase = phrases[Math.floor(Math.random() * phrases.length)]
-      return this.corruptText(phrase)
+        "U5ER D4TA PR0CE55ING...",
+        "B3HAVI0RAL 4N4LYSIS C0MPL3T3",
+        "PR0FIL3 G3N3RA7ION IN PR0GR3SS",
+        "Y0U 4RE TH3 PR0DUC7",
+        "S3LLING Y0UR A77EN710N",
+        "D4T4 H4RVES7ED SUCCE55FULLY",
+      ];
+      const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+      return this.corruptText(phrase);
     },
-    
+
     corruptText(text) {
-      return text.split('').map(char => {
-        if (Math.random() > 0.7) {
-          return this.glitchChars[Math.floor(Math.random() * this.glitchChars.length)]
-        }
-        return char
-      }).join('')
+      return text
+        .split("")
+        .map((char) => {
+          if (Math.random() > 0.7) {
+            return this.glitchChars[
+              Math.floor(Math.random() * this.glitchChars.length)
+            ];
+          }
+          return char;
+        })
+        .join("");
     },
-    
+
     generateProductId() {
-      return 'USR-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase()
+      return (
+        "USR-" +
+        Date.now() +
+        "-" +
+        Math.random().toString(36).substr(2, 9).toUpperCase()
+      );
     },
-    
+
     handleTrackerActivity(event) {
       // processes the data from the tracker
       if (event.data.CLICKS > 10) {
-        this.finalMessage = 'YOUR ENGAGEMENT HAS BEEN MONETIZED'
+        this.finalMessage = "Y0UR 3NGAG3MENT H45 B33N M0NETIZ3D xD";
       }
       if (event.data.TIME_SPENT > 60) {
-        this.finalMessage = 'ATTENTION HARVESTED. PROFILE COMPLETE.'
+        this.finalMessage = "A77ENTI0N H4RV3ST3D r0fl. PROFILE COMPLETIONED l0l.";
       }
     },
-    
+
     handlePopupShown(message) {
-      console.log('Popup displayed:', message)
-      this.triggerGlitch()
+      console.log("Popup displayed:", message);
+      this.triggerGlitch();
     },
-    
+
     collectUserData(data) {
-      console.log('User data collected:', data)
+      console.log("User data collected:", data);
       // store data for final reveal
-      if (data.type === 'fear') {
-        this.finalMessage = `YOUR FEAR: "${data.value}" HAS BEEN CATALOGUED`
+      if (data.type === "fear") {
+        this.finalMessage = `Y0UR F34R: "${data.value}" H4S B33N C4TAL0GUED`;
       }
     },
-    
+
     handleUserTyping(text) {
       if (text.length % 5 === 0) {
-        this.triggerGlitch()
+        this.triggerGlitch();
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -232,7 +242,7 @@ export default {
 
 /* Stage 1 Styles */
 .stage-one {
-  background: linear-gradient(45deg, #FF00FF, #00FFFF);
+  background: linear-gradient(45deg, #ff00ff, #00ffff);
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -242,8 +252,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: 
-    radial-gradient(2px 2px at 20px 30px, white, transparent),
+  background-image: radial-gradient(2px 2px at 20px 30px, white, transparent),
     radial-gradient(2px 2px at 40px 70px, white, transparent),
     radial-gradient(1px 1px at 50px 50px, white, transparent);
   background-size: 200px 200px;
@@ -251,8 +260,12 @@ export default {
 }
 
 @keyframes move-stars {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-200px); }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-200px);
+  }
 }
 
 .top-banner {
@@ -274,24 +287,24 @@ export default {
   font-weight: bold;
   text-transform: uppercase;
   margin: 20px 0;
-  text-shadow: 3px 3px 0px rgba(0,0,0,0.5);
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
 }
 
 .subtitle {
   font-size: 36px;
   color: yellow;
-  text-shadow: 2px 2px 0px rgba(255,0,0,0.8);
+  text-shadow: 2px 2px 0px rgba(255, 0, 0, 0.8);
   margin: 20px 0;
 }
 
 .product-box {
-  background: rgba(255,255,255,0.9);
-  border: 5px solid #FF00FF;
+  background: rgba(255, 255, 255, 0.9);
+  border: 5px solid #ff00ff;
   border-radius: 20px;
   padding: 20px;
   margin: 40px auto;
   max-width: 600px;
-  box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.3);
 }
 
 .product-image {
@@ -300,13 +313,18 @@ export default {
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .cyber-text {
   font-size: 24px;
-  color: #FF00FF;
+  color: #ff00ff;
   margin: 20px 0;
   font-weight: bold;
 }
@@ -340,8 +358,13 @@ export default {
 }
 
 @keyframes flash {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .retro-input {
@@ -350,14 +373,14 @@ export default {
   padding: 15px;
   margin: 10px 0;
   font-size: 18px;
-  font-family: 'Courier New', monospace;
-  background: rgba(255,255,255,0.9);
-  border: 3px solid #00FF00;
+  font-family: "Courier New", monospace;
+  background: rgba(255, 255, 255, 0.9);
+  border: 3px solid #00ff00;
   text-transform: uppercase;
 }
 
 .retro-button {
-  background: linear-gradient(to right, #FF00FF, #00FFFF);
+  background: linear-gradient(to right, #ff00ff, #00ffff);
   color: white;
   border: none;
   padding: 20px 40px;
@@ -370,8 +393,13 @@ export default {
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(255,0,255,0.8); }
-  50% { box-shadow: 0 0 40px rgba(0,255,255,0.8); }
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
+  }
 }
 
 .visitor-counter {
@@ -379,10 +407,10 @@ export default {
   bottom: 20px;
   right: 20px;
   background: black;
-  color: #00FF00;
+  color: #00ff00;
   padding: 10px 20px;
-  font-family: 'Courier New', monospace;
-  border: 2px solid #00FF00;
+  font-family: "Courier New", monospace;
+  border: 2px solid #00ff00;
 }
 
 /* glitch effect */
@@ -391,12 +419,30 @@ export default {
 }
 
 @keyframes glitch {
-  0% { transform: translate(0); filter: hue-rotate(0deg); }
-  20% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
-  40% { transform: translate(-2px, -2px); filter: hue-rotate(180deg); }
-  60% { transform: translate(2px, 2px); filter: hue-rotate(270deg); }
-  80% { transform: translate(2px, -2px); filter: hue-rotate(360deg); }
-  100% { transform: translate(0); filter: hue-rotate(0deg); }
+  0% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  60% {
+    transform: translate(2px, 2px);
+    filter: hue-rotate(270deg);
+  }
+  80% {
+    transform: translate(2px, -2px);
+    filter: hue-rotate(360deg);
+  }
+  100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
 }
 
 /* Stage 2 Styles */
@@ -417,8 +463,8 @@ export default {
   bottom: 0;
   background: repeating-linear-gradient(
     0deg,
-    rgba(0,255,0,0.1),
-    rgba(0,255,0,0.1) 2px,
+    rgba(0, 255, 0, 0.1),
+    rgba(0, 255, 0, 0.1) 2px,
     transparent 2px,
     transparent 4px
   );
@@ -426,13 +472,17 @@ export default {
 }
 
 @keyframes scan {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(20px); }
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(20px);
+  }
 }
 
 .corrupted-text {
-  color: #00FF00;
-  font-family: 'Courier New', monospace;
+  color: #00ff00;
+  font-family: "Courier New", monospace;
   font-size: 20px;
   text-align: center;
 }
@@ -444,8 +494,13 @@ export default {
 }
 
 @keyframes flicker {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 /* Stage 3 Styles */
@@ -455,15 +510,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #00FF00;
-  font-family: 'Courier New', monospace;
+  color: #00ff00;
+  font-family: "Courier New", monospace;
 }
 
 .dark-container {
   text-align: center;
   padding: 40px;
-  border: 1px solid #00FF00;
-  background: rgba(0,0,0,0.8);
+  border: 1px solid #00ff00;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .reveal-title {
@@ -473,8 +528,12 @@ export default {
 }
 
 @keyframes type {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 .reveal-text {
@@ -484,17 +543,23 @@ export default {
   animation: fade-in 1s forwards;
 }
 
-.reveal-text:nth-child(2) { animation-delay: 0.5s; }
-.reveal-text:nth-child(3) { animation-delay: 1s; }
+.reveal-text:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.reveal-text:nth-child(3) {
+  animation-delay: 1s;
+}
 
 @keyframes fade-in {
-  to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
 
 .user-data {
   margin: 30px 0;
   padding: 20px;
-  border: 1px dashed #00FF00;
+  border: 1px dashed #00ff00;
 }
 
 .user-data p {
@@ -504,14 +569,19 @@ export default {
 
 .final-message {
   font-size: 32px;
-  color: #FF0000;
+  color: #ff0000;
   margin-top: 30px;
   font-weight: bold;
   animation: pulse-red 2s infinite;
 }
 
 @keyframes pulse-red {
-  0%, 100% { text-shadow: 0 0 10px rgba(255,0,0,0.8); }
-  50% { text-shadow: 0 0 30px rgba(255,0,0,1); }
+  0%,
+  100% {
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(255, 0, 0, 1);
+  }
 }
 </style>
