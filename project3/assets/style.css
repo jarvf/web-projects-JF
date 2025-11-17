@@ -207,7 +207,7 @@ textarea {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 8px;
-    margin-top: 8px
+    margin-top: 8px;
 }
 
 .top8 .bubble {
@@ -325,7 +325,7 @@ body.myspace .site-footer {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 0;
     background-image: url("images/tiles/sparkle.gif");
     background-repeat: repeat;
     mix-blend-mode: screen;
@@ -356,7 +356,9 @@ body.myspace .site-footer {
 /* avatr frames */
 .top8 {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    /* OLD line of code which had overflow */
+    /* grid-template-columns: repeat(8, 1fr); */
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 8px;
     margin-top: 8px;
 }
@@ -407,3 +409,34 @@ h3 {
     border-width: 2px;
     border-style: solid;
 }
+
+/* START media queries (from Bryan) */
+@media (min-width: 600px) and (max-width: 860px) {
+    .top8 {
+        grid-template-columns: repeat(4, minmax(80px, 1fr));
+    }
+}
+@media (min-width: 460px) and (max-width: 600px) {
+    .top8 {
+        grid-template-columns: repeat(3, minmax(80px, 1fr));
+    }
+}
+@media (max-width: 460px) {
+    .top8 {
+        grid-template-columns: repeat(2, minmax(80px, 1fr));
+    }
+}
+/* END media queries */
+
+/* START additional/minor CSS changes (by Bryan) */
+/* This is just to solve any visibility issues on the homepage by adding a background */
+.behindText {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-top: 20px;
+    background: rgba(17, 17, 17, 0.88);
+    backdrop-filter: blur(2px);
+    z-index: 1;
+}
+/* END additional/minor CSS changes */
