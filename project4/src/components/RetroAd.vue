@@ -144,7 +144,7 @@ methods: {
   },
 
   handleSubmit() {
-    // If they haven't filled both, glitch at them but don't move on yet
+    // If they haven't filled and clicked, fire glitches
     if (!this.userInfo.name || !this.userInfo.email) {
       this.finalMessage = 'INCOMPLETE CREDENTIALS. PROFILE INTAKE PENDING.'
       this.triggerGlitch()
@@ -156,6 +156,7 @@ methods: {
       this.stage = 2
       setTimeout(() => {
         this.stage = 3
+        this.downloadUserTXT()
       }, 3000) 
     }
   },
@@ -231,8 +232,36 @@ methods: {
         this.triggerGlitch();
       }
     },
+
+    downloadUserTXT() {
+      // NOT MALWARE l0l
+      const text = `
+=== CYBERDREAM DATA EXTRACTION COMPLETE ===
+
+Product ID: ${this.generateProductId()}
+Name: ${this.userInfo.name || "UNKNOWN"}
+Email: ${this.userInfo.email || "UNKNOWN"}
+
+Interaction Points: ${this.interactionCount}
+
+Final Message: ${this.finalMessage}
+
+Timestamp: ${new Date().toLocaleString()}
+`;
+
+      const file = new Blob([text], { type: "text/plain" });
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file);
+      link.download = "USER_EXPORT.txt";
+
+      // download trigger
+      link.click();
+      URL.revokeObjectURL(link.href);
+    },
   },
 };
+
 </script>
 
 <style scoped>
