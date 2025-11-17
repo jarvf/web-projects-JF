@@ -29,12 +29,20 @@
 
 <script>
 export default {
+  props: {
+  forceFear: {
+    type: Boolean,
+    default: false
+  }
+},
+
   name: "CreepyPopup",
   data() {
     return {
       visible: false,
       userInput: "",
       messageIndex: 0,
+      fearShown: false,
       messages: [
         {
           title: "SP3CI4L 0FFER JUS7 F0R Y0U",
@@ -71,6 +79,14 @@ export default {
       currentMessage: {},
     };
   },
+  watch: {
+  forceFear(newVal) {
+    if (newVal && !this.visible && !this.fearShown) {
+      this.showFearPopup()
+    }
+  }
+},
+
   mounted() {
     this.startRandomPopups();
   },
@@ -86,6 +102,23 @@ export default {
         }, 15000);
       }, 8000);
     },
+    showFearPopup() {
+  // find verify humanity message
+  const fearIndex = this.messages.findIndex(
+    (m) => m.title && m.title.toUpperCase().includes('V3RI1Y Y0UR HUM4NI7Y PL0X')
+  )
+
+  if (fearIndex !== -1) {
+    this.currentMessage = this.messages[fearIndex]
+  } else {
+    // fallbacks
+    this.currentMessage = this.messages[1] || this.messages[0]
+  }
+
+  this.visible = true
+  this.fearShown = true
+  this.$emit('popup-shown', this.currentMessage.title)
+},
 
     showPopup() {
       if (!this.visible) {

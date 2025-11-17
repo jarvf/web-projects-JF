@@ -8,6 +8,7 @@
 
     <!--creepypop -->
     <CreepyPopup
+      :force-fear="stage === 3"
       @popup-shown="handlePopupShown"
       @user-data="collectUserData"
       @user-typing="handleUserTyping"
@@ -47,17 +48,17 @@
         <div class="form-container">
           <h3 class="form-title">CL4IM3R1NG Y0UR FUTURE'S T0D4Y!</h3>
           <form @submit.prevent="handleSubmit">
-            <input 
-              v-model="userInfo.name" 
-              type="text" 
-              placeholder="YOUR NAME" 
+            <input
+              v-model="userInfo.name"
+              type="text"
+              placeholder="YOUR NAME"
               class="retro-input"
               @input="handleInteraction"
             />
-            <input 
-              v-model="userInfo.email" 
-              type="email" 
-              placeholder="YOUR EMAIL" 
+            <input
+              v-model="userInfo.email"
+              type="email"
+              placeholder="YOUR EMAIL"
               class="retro-input"
               @input="handleInteraction"
             />
@@ -65,7 +66,6 @@
               💾 DOWNLOAD NOW 💾
             </button>
           </form>
-
         </div>
 
         <div class="visitor-counter">Visitor #{{ visitorCount }}</div>
@@ -84,17 +84,22 @@
 
     <!-- Stage 3 -->
     <div v-else-if="stage === 3" class="stage-three">
-      <div class="dark-container">
-        <h1 class="reveal-title">C0NGR47UM4L47I0NS</h1>
-        <p class="reveal-text">Pr0duc7 ID: {{ generateProductId() }}</p>
-        <p class="reveal-text">Status: 5UCC3SSFULLY C4T4L0GU3D</p>
+      <div v-if="!glitchOut" class="dark-container">
+        <h1 class="reveal-title">CONGRATULATIONS</h1>
+        <p class="reveal-text">Product ID: {{ generateProductId() }}</p>
+        <p class="reveal-text">Status: SUCCESSFULLY CATALOGUED</p>
         <div class="user-data">
           <p>Name: {{ userInfo.name || "ANONYMOUS_USER" }}</p>
           <p>Email: {{ userInfo.email || "DATA_COLLECTED" }}</p>
-          <p>Int3r4ct10n P0in7s: {{ interactionCount }}</p>
-          <p>B3hav10r4l Pr0fil3: C0MPL37ION3D</p>
+          <p>Interaction Points: {{ interactionCount }}</p>
+          <p>Behavioral Profile: COMPLETE</p>
         </div>
         <p class="final-message">{{ finalMessage }}</p>
+      </div>
+
+      <!-- terminate -->
+      <div v-else class="terminated-screen">
+        <div class="terminated-text">YOUR DATA HAS BEEN SOLD.</div>
       </div>
     </div>
   </div>
@@ -129,43 +134,44 @@ export default {
       glitchChars: "!@#$%^&*()_+-=[]{}|;:,.<>?/~`",
       finalMessage: "Y0U 4R3 TH3 PR0DUC7",
       glitchIntensity: 0.1,
+      glitchOut: false,
     };
   },
-methods: {
-  handleInteraction() {
-    this.interactionCount++
+  methods: {
+    handleInteraction() {
+      this.interactionCount++;
 
-    this.glitchIntensity = Math.min(0.9, this.interactionCount * 0.06)
+      this.glitchIntensity = Math.min(0.9, this.interactionCount * 0.06);
 
-    // typing interaction glitches
-    if (this.interactionCount > 5) {
-      this.triggerGlitch()
-    }
-  },
+      // typing interaction glitches
+      if (this.interactionCount > 5) {
+        this.triggerGlitch();
+      }
+    },
 
-  handleSubmit() {
-    // If they haven't filled and clicked, fire glitches
-    if (!this.userInfo.name || !this.userInfo.email) {
-      this.finalMessage = 'INCOMPLETE CREDENTIALS. PROFILE INTAKE PENDING.'
-      this.triggerGlitch()
-      return
-    }
+    handleSubmit() {
+      // If they haven't filled and clicked, fire glitches
+      if (!this.userInfo.name || !this.userInfo.email) {
+        this.finalMessage = "INCOMPLETE CREDENTIALS. PROFILE INTAKE PENDING.";
+        this.triggerGlitch();
+        return;
+      }
 
-    // Full data, k process
-    if (this.stage === 1) {
-      this.stage = 2
-      setTimeout(() => {
-        this.stage = 3
-        this.downloadUserTXT()
-      }, 3000) 
-    }
-  },
+      // Process
+      if (this.stage === 1) {
+        this.stage = 2;
 
-    triggerGlitch() {
-      this.isGlitching = true;
-      setTimeout(() => {
-        this.isGlitching = false;
-      }, 200);
+        setTimeout(() => {
+          this.stage = 3;
+          this.downloadUserTXT();
+
+          // FINAL GLITCH-OUT
+          setTimeout(() => {
+            this.glitchOut = true;
+            this.triggerGlitch();
+          }, 12000);
+        }, 3000);
+      }
     },
 
     getGlitchText() {
@@ -210,7 +216,8 @@ methods: {
         this.finalMessage = "Y0UR 3NGAG3MENT H45 B33N M0NETIZ3D xD";
       }
       if (event.data.TIME_SPENT > 60) {
-        this.finalMessage = "A77ENTI0N H4RV3ST3D r0fl. PROFILE COMPLETIONED l0l.";
+        this.finalMessage =
+          "A77ENTI0N H4RV3ST3D r0fl. PROFILE COMPLETIONED l0l.";
       }
     },
 
@@ -261,7 +268,6 @@ Timestamp: ${new Date().toLocaleString()}
     },
   },
 };
-
 </script>
 
 <style scoped>
@@ -618,5 +624,43 @@ Timestamp: ${new Date().toLocaleString()}
 .stars {
   pointer-events: none !important;
 }
+/* kill screen */
+.terminated-screen {
+  background: #000;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.terminated-text {
+  color: #ff0000;
+  font-family: "Courier New", monospace;
+  font-size: 28px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  animation: final-glitch 1.2s infinite;
+}
+
+@keyframes final-glitch {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.8), 2px 0 0 rgba(0, 255, 0, 0.7),
+      -2px 0 0 rgba(0, 0, 255, 0.7);
+  }
+  20% {
+    text-shadow: -2px 0 0 rgba(255, 0, 0, 0.8), 2px 0 0 rgba(0, 255, 0, 0.7),
+      -1px 0 0 rgba(0, 0, 255, 0.7);
+  }
+  40% {
+    text-shadow: 1px 0 0 rgba(255, 0, 0, 0.8), -2px 0 0 rgba(0, 255, 0, 0.7),
+      2px 0 0 rgba(0, 0, 255, 0.7);
+  }
+  60% {
+    text-shadow: 0 0 2px rgba(255, 0, 0, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 8px rgba(255, 0, 0, 1);
+  }
+}
 </style>
